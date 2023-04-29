@@ -180,7 +180,7 @@ resource "aws_network_interface" "nodejs-web-app" {
 }
 # 8.1 Assign an Elastic IP to the Network Interface of Jenkins
 
-resource "aws_eip" "jenkins-eip" {
+resource "aws_eip" "jenkins" {
   vpc                       = true
   network_interface         = aws_network_interface.jenkins.id
   associate_with_private_ip = "10.0.1.50"
@@ -190,7 +190,7 @@ resource "aws_eip" "jenkins-eip" {
 }
 # 8.2 Assign an Elastic IP to the Network Interface of Simple Web App
 
-resource "aws_eip" "nodejs-web-app-eip" {
+resource "aws_eip" "nodejs-web-app" {
   vpc                       = true
   network_interface         = aws_network_interface.nodejs-web-app.id
   associate_with_private_ip = "10.0.3.50"

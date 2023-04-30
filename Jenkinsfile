@@ -73,7 +73,7 @@ pipeline {
     }
     stage("Clean Up") {
       steps {
-        echo 'Clean up local docker images'
+        echo 'Clean up local     docker images'
         script {
           sh """
           echo "Hello World"

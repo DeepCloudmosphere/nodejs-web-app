@@ -63,7 +63,7 @@ pipeline {
     }
     stage("Deploy to Fixed Server") {
       steps {
-        echo 'Deploy release to production'
+        echo 'Deploy release to     production'
         script {
           sh """
           echo "Hello World"

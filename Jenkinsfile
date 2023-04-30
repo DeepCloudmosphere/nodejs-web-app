@@ -10,7 +10,7 @@ def ACCOUNT_REGISTRY_PREFIX
 def S3_LOGS
 def DATE_NOW
 def SLACK_TOKEN
-def CHANNEL_ID = "C0554FYNSA3"
+def CHANNEL_ID = "#ci-cd-pipeline"
 
 
 
@@ -95,13 +95,7 @@ pipeline {
 
                     // Send Slack notification with the result of the tests
                     sh"""
-                    curl --location --request POST 'https://slack.com/api/chat.postMessage' \
-                            --header 'Authorization: Bearer $SLACK_TOKEN' \
-                            --header 'Content-Type: application/json' \
-                            --data-raw '{
-                                "channel": \"$CHANNEL_ID\",
-                                "text": \"$textMessage\"
-                            }'
+curl https://slack.com/api/chat.postMessage -X POST -d "channel=$CHANNEL_ID" -d "text=$textMessage"  -d "token=xoxb-5182477046070-5189093730674-ZlFDWcMwvJgkdueJJoVrdccq"
                     """ 
                     if(inError) {
                     // Send an error signal to stop the pipeline
@@ -188,16 +182,16 @@ pipeline {
       // Upload the load test results to S3
              sh "aws s3 cp ./load_test.txt s3://$S3_LOGS/$DATE_NOW/$GIT_COMMIT_HASH/"
 
-            stagingImage.withRun('-u root'){
-                sh """
-                # run arachni to check for common vulnerabilities
-                \$HOME/opt/arachni-1.5.1-0.5.12/bin/arachni http://\$(hostname):8000 --check=xss,code_injection --report-save-path=simple-web-app.com.afr
-                # Save report in html (zipped)
-                \$HOME/opt/arachni-1.5.1-0.5.12/bin/arachni_reporter simple-web-app.com.afr --reporter=html:outfile=arachni_report.html.zip
-                """
-            }
-            // Upload the Arachni tests' results to S3  
-            sh "aws s3 cp ./arachni_report.html.zip s3://$S3_LOGS/$DATE_NOW/$GIT_COMMIT_HASH/"
+            // stagingImage.withRun('-u root'){
+            //     sh """
+            //     # run arachni to check for common vulnerabilities
+            //     \$HOME/opt/arachni-1.5.1-0.5.12/bin/arachni http://\$(hostname):8000 --check=xss,code_injection --report-save-path=simple-web-app.com.afr
+            //     # Save report in html (zipped)
+            //     \$HOME/opt/arachni-1.5.1-0.5.12/bin/arachni_reporter simple-web-app.com.afr --reporter=html:outfile=arachni_report.html.zip
+            //     """
+            // }
+            // // Upload the Arachni tests' results to S3  
+            // sh "aws s3 cp ./arachni_report.html.zip s3://$S3_LOGS/$DATE_NOW/$GIT_COMMIT_HASH/"
 
             // Inform via slack that the Load Balancing and Security checks are completed
             sh"""

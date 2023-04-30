@@ -3,11 +3,17 @@
 sudo yum update -y
 
 # Install Docker
-sudo amazon-linux-extras install docker
+sudo yum install docker -y
+# sudo amazon-linux-extras install docker
 
 # Start Docker
 sudo systemctl start docker
+
+# Enable Docker to run on boot
 sudo systemctl enable docker
+
+# Let Jenkins and the current user use docker
+sudo usermod -a -G docker ec2-user
 
 # Create a shell script to run the server by taking the image tagged as simple-web-app:release from the ECR 
 cat << EOT > start-website

@@ -214,6 +214,14 @@ curl https://slack.com/api/chat.postMessage -X POST -d "channel=$CHANNEL_ID" -d 
             productionImage.push()
             sh """
                 aws ec2 reboot-instances --region us-east-1 --instance-ids $INSTANCE_ID
+
+                curl --location --request POST 'https://slack.com/api/chat.postMessage' \
+                --header 'Authorization: Bearer $SLACK_TOKEN' \
+                --header 'Content-Type: application/json' \
+                --data-raw '{
+                    "channel": \"$CHANNEL_ID\",
+                    "text": "Deployed successfully"
+                }'
             """
         }
       }
@@ -240,6 +248,13 @@ curl https://slack.com/api/chat.postMessage -X POST -d "channel=$CHANNEL_ID" -d 
         script {
         sh """
         rm $HOME/.docker/config.json
+                        curl --location --request POST 'https://slack.com/api/chat.postMessage' \
+                        --header 'Authorization: Bearer $SLACK_TOKEN' \
+                        --header 'Content-Type: application/json' \
+                        --data-raw '{
+                            "channel": \"$CHANNEL_ID\",
+                            "text": "Clean up jenkins instance"
+                        }'
         """
         }
       }

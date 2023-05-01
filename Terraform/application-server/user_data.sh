@@ -25,9 +25,13 @@ sudo docker run -p 80:8000 ${repository_url}:release
 EOT
 
 # Move the script into the specific amazon ec2 linux start up folder, in order for the script to run after boot
+
 sudo mv start-website /etc/init.d
 sudo chkconfig --add start-website
 sudo chkconfig start-website on
+
+sudo chmod +x /etc/init.d/start-website
+
 # sudo mv start-website /var/lib/cloud/scripts/per-boot/start-website
 
 # Mark the script as executable

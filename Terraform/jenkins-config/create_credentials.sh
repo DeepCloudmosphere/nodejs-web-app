@@ -1,7 +1,7 @@
 #! /bin/bash
 
 # Retrieve Secrets and Extract the Private key using a python command
-aws secretsmanager get-secret-value --secret-id nodejs-web-app6 --region us-east-1 | python -c "import sys;import json;print(json.loads(json.loads(sys.stdin.read())['SecretString'])['private'])" > ssh_tmp
+aws secretsmanager get-secret-value --secret-id nodejs-web-app7 --region us-east-1 | python -c "import sys;import json;print(json.loads(json.loads(sys.stdin.read())['SecretString'])['private'])" > ssh_tmp
 # aws secretsmanager get-secret-value --secret-id nodejs-web-app6 --region us-east-1 | python -c "import sys;import json;print(json.loads(json.loads(sys.stdin.read())['SecretString'])['slackToken'])" 
 
 # Correctly parse the new line characters and store the key in a variable

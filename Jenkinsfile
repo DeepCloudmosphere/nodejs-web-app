@@ -31,7 +31,7 @@ pipeline {
       DATE_NOW = sh (script: "date +%Y%m%d", returnStdout: true)
 
       // To parse and extract the Slack Token from the JSON response of AWS
-      SLACK_TOKEN = sh (script: "aws secretsmanager get-secret-value --secret-id nodejs-web-app6 --region us-east-1 | python -c \"import sys;import json;print(json.loads(json.loads(sys.stdin.read())['SecretString'])['slackToken'])\" ", returnStdout: true)
+      SLACK_TOKEN = sh (script: "aws secretsmanager get-secret-value --secret-id nodejs-web-app7 --region us-east-1 | python -c \"import sys;import json;print(json.loads(json.loads(sys.stdin.read())['SecretString'])['slackToken'])\" ", returnStdout: true)
 
       REPOSITORY = REPOSITORY.trim()
       REPOSITORY_TEST = REPOSITORY_TEST.trim()
@@ -45,6 +45,7 @@ pipeline {
       // Log into ECR
       sh """
       /bin/sh -e -c 'echo \$(aws ecr get-login-password --region us-east-1)  | docker login -u AWS --password-stdin $ACCOUNT_REGISTRY_PREFIX'
+
       """
         }
       }
@@ -95,7 +96,7 @@ pipeline {
 
                     // Send Slack notification with the result of the tests
                     sh"""
-curl https://slack.com/api/chat.postMessage -X POST -d "channel=$CHANNEL_ID" -d "text=$textMessage"  -d "token=xoxb-5182477046070-5189093730674-ZlFDWcMwvJgkdueJJoVrdccq"
+                      curl https://slack.com/api/chat.postMessage -X POST -d "channel=$CHANNEL_ID" -d "text=$textMessage"  -d "token=xoxb-5182477046070-5189093730674-ZlFDWcMwvJgkdueJJoVrdccq"
                     """ 
                     if(inError) {
                     // Send an error signal to stop the pipeline
@@ -248,13 +249,6 @@ curl https://slack.com/api/chat.postMessage -X POST -d "channel=$CHANNEL_ID" -d 
         script {
         sh """
         rm $HOME/.docker/config.json
-                        curl --location --request POST 'https://slack.com/api/chat.postMessage' \
-                        --header 'Authorization: Bearer $SLACK_TOKEN' \
-                        --header 'Content-Type: application/json' \
-                        --data-raw '{
-                            "channel": \"$CHANNEL_ID\",
-                            "text": "Clean up jenkins instance"
-                        }'
         """
         }
       }
